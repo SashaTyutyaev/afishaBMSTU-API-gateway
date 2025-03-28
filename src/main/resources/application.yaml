@@ -1,0 +1,67 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: AFI-BMSTU-api-gateway
+  cloud:
+    gateway:
+      routes:
+        # ???????? API ????????
+        - id: user-service
+          uri: lb://AFI-BMSTU-user-service
+          predicates:
+            - Path=/api/users/**
+
+        - id: auth-service
+          uri: lb://AFI-BMSTU-auth-service
+          predicates:
+            - Path=/api/auth/**
+
+        - id: event-service
+          uri: lb://AFI-BMSTU-event-service
+          predicates:
+            - Path=/api/admin/**,/api/creator/**,/api/comments/**,/api/events/**,/api/compilations/**,/api/categories/**,/api/requests/**
+
+        # ???????? ??? ???????????? (?????: ?????? ???? ??? ???????!)
+        - id: user-service-docs
+          uri: lb://AFI-BMSTU-user-service
+          predicates:
+            - Path=/docs/user-service/v3/api-docs
+          filters:
+            - RewritePath=/docs/user-service/(?<path>.*), /$\{path}
+
+        - id: auth-service-docs
+          uri: lb://AFI-BMSTU-auth-service
+          predicates:
+            - Path=/docs/auth-service/v3/api-docs
+          filters:
+            - RewritePath=/docs/auth-service/(?<path>.*), /$\{path}
+
+        - id: event-service-docs
+          uri: lb://AFI-BMSTU-event-service
+          predicates:
+            - Path=/docs/event-service/v3/api-docs
+          filters:
+            - RewritePath=/docs/event-service/(?<path>.*), /$\{path}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    url: /v3/api-docs  # ???????? ???????????? Gateway
+    urls:
+      - name: User Service
+        url: /docs/user-service/v3/api-docs
+      - name: Auth Service
+        url: /docs/auth-service/v3/api-docs
+      - name: Event Service
+        url: /docs/event-service/v3/api-docs
+    tags-sorter: alpha
+    operations-sorter: alpha
