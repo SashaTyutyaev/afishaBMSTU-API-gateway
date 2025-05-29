@@ -18,7 +18,7 @@ spring:
         - id: event-service
           uri: lb://AFI-BMSTU-event-service
           predicates:
-            - Path=/api/admin/**,/api/creator/**,/api/comments/**,/api/events/**,/api/compilations/**,/api/categories/**,/api/requests/**
+            - Path=/api/admin/**,/api/creator/**,/api/comments/**,/api/events/**,/api/compilations/**,/api/categories/**,/api/requests/**,/api/bmstu-data/**
 
         # Роуты для Swagger UI
         - id: user-service-swagger
